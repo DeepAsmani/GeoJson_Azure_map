@@ -1,8 +1,9 @@
 var map;
+var popup;
 document.addEventListener("DOMContentLoaded", function () {
   map = new atlas.Map("map", {
     center: [cityLongitude, cityLatitude],
-    zoom: 11,
+    zoom: 12,
     view: "Auto",
     authOptions: {
       authType: "subscriptionKey",
@@ -11,6 +12,10 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   map.events.add("ready", function () {
+    popup = new atlas.Popup({
+      position: [0, 0],
+    });
+
     map.controls.add(
       new atlas.control.StyleControl({
         mapStyles: "all",
@@ -19,65 +24,65 @@ document.addEventListener("DOMContentLoaded", function () {
         position: "top-right",
       }
     );
+
     var wardDataSource = new atlas.source.DataSource();
     map.sources.add(wardDataSource);
-
-    map.layers.add(
-      new atlas.layer.PolygonLayer(wardDataSource, null, {
-        fillColor: "gray",
-        fillOpacity: 0.7,
-      })
-    );
-
+    var ward = new atlas.layer.PolygonLayer(wardDataSource, null, {
+      fillColor: "gray",
+      fillOpacity: 0.7,
+    });
+    map.events.add("click", ward, featureClicked);
+    map.layers.add(ward);
     wardDataSource.importDataFromUrl(wardGeojson);
 
     map.imageSprite.add("library", "static/img/Library.png").then(function () {
       var librariesDataSource = new atlas.source.DataSource();
       map.sources.add(librariesDataSource);
-
-      map.layers.add(
-        new atlas.layer.SymbolLayer(librariesDataSource, null, {
-          iconOptions: {
-            image: "library",
-            size: 0.2,
-            allowOverlap: true,
-            ignorePlacement: true,
-          },
-          filter: [
-            "any",
-            ["==", ["geometry-type"], "Point"],
-            ["==", ["geometry-type"], "MultiPoint"],
-          ],
-        })
-      );
+      var library = new atlas.layer.SymbolLayer(librariesDataSource, null, {
+        iconOptions: {
+          image: "library",
+          size: 0.12,
+          allowOverlap: true,
+          ignorePlacement: true,
+        },
+        filter: [
+          "any",
+          ["==", ["geometry-type"], "Point"],
+          ["==", ["geometry-type"], "MultiPoint"],
+        ],
+      });
+      map.events.add("click", library, featureClicked);
+      map.layers.add(library);
       librariesDataSource.importDataFromUrl(librariesGeojson);
     });
 
     map.imageSprite.add("gym", "static/img/gym.png").then(function () {
       var gymsDataSource = new atlas.source.DataSource();
       map.sources.add(gymsDataSource);
-      map.layers.add(
-        new atlas.layer.SymbolLayer(gymsDataSource, null, {
-          iconOptions: {
-            image: "gym",
-            allowOverlap: true,
-            ignorePlacement: true,
-            size: 0.1,
-          },
-          filter: [
-            "any",
-            ["==", ["geometry-type"], "Point"],
-            ["==", ["geometry-type"], "MultiPoint"],
-          ],
-        })
-      );
+      var gym = new atlas.layer.SymbolLayer(gymsDataSource, null, {
+        iconOptions: {
+          image: "gym",
+          allowOverlap: true,
+          ignorePlacement: true,
+          size: 0.1,
+        },
+        filter: [
+          "any",
+          ["==", ["geometry-type"], "Point"],
+          ["==", ["geometry-type"], "MultiPoint"],
+        ],
+      });
+      map.events.add("click", gym, featureClicked);
+      map.layers.add(gym);
       gymsDataSource.importDataFromUrl(gymsGeojson);
     });
 
     var swimmingPoolsDataSource = new atlas.source.DataSource();
     map.sources.add(swimmingPoolsDataSource);
-    map.layers.add(
-      new atlas.layer.SymbolLayer(swimmingPoolsDataSource, null, {
+    var swimmingPools = new atlas.layer.SymbolLayer(
+      swimmingPoolsDataSource,
+      null,
+      {
         iconOptions: {
           image: "marker-darkblue",
           allowOverlap: true,
@@ -88,46 +93,57 @@ document.addEventListener("DOMContentLoaded", function () {
           ["==", ["geometry-type"], "Point"],
           ["==", ["geometry-type"], "MultiPoint"],
         ],
-      })
+      }
     );
+    map.events.add("click", swimmingPools, featureClicked);
+    map.layers.add(swimmingPools);
     swimmingPoolsDataSource.importDataFromUrl(swimmingPoolsGeojson);
 
-    var zonalOfficeDataSource = new atlas.source.DataSource();
-    map.sources.add(zonalOfficeDataSource);
-    map.layers.add(
-      new atlas.layer.SymbolLayer(zonalOfficeDataSource, null, {
-        iconOptions: {
-          image: "marker-blue",
-          allowOverlap: true,
-          ignorePlacement: true,
-        },
-        filter: [
-          "any",
-          ["==", ["geometry-type"], "Point"],
-          ["==", ["geometry-type"], "MultiPoint"],
-        ],
-      })
-    );
-    zonalOfficeDataSource.importDataFromUrl(zonalOfficeGeojson);
+    map.imageSprite.add("zonal", "static/img/offices.png").then(function () {
+      var zonalOfficeDataSource = new atlas.source.DataSource();
+      map.sources.add(zonalOfficeDataSource);
+      var zoneoffice = new atlas.layer.SymbolLayer(
+        zonalOfficeDataSource,
+        null,
+        {
+          iconOptions: {
+            image: "zonal",
+            allowOverlap: true,
+            ignorePlacement: true,
+            size: 0.1,
+          },
+          filter: [
+            "any",
+            ["==", ["geometry-type"], "Point"],
+            ["==", ["geometry-type"], "MultiPoint"],
+          ],
+        }
+      );
+      map.events.add("click", zoneoffice, featureClicked);
+      map.layers.add(zoneoffice);
+      zonalOfficeDataSource.importDataFromUrl(zonalOfficeGeojson);
+    });
 
-    var wardOfficeDataSource = new atlas.source.DataSource();
-    map.sources.add(wardOfficeDataSource);
-    map.layers.add(
-      new atlas.layer.SymbolLayer(wardOfficeDataSource, null, {
-        iconOptions: {
-          image: "marker-yellow",
-          allowOverlap: true,
-          ignorePlacement: true,
-        },
-        filter: [
-          "any",
-          ["==", ["geometry-type"], "Point"],
-          ["==", ["geometry-type"], "MultiPoint"],
-        ],
-      })
-    );
-
-    wardOfficeDataSource.importDataFromUrl(wardOfficeGeojson);
+    // map.imageSprite.add("wardoffice", "static/img/office.png").then(function () {
+    //   var wardOfficeDataSource = new atlas.source.DataSource();
+    //   map.sources.add(wardOfficeDataSource);
+    //   var wardOffice = new atlas.layer.SymbolLayer(wardOfficeDataSource, null, {
+    //     iconOptions: {
+    //       image: "wardoffice",
+    //       allowOverlap: true,
+    //       ignorePlacement: true,
+    //       size:0.1
+    //     },
+    //     filter: [
+    //       "any",
+    //       ["==", ["geometry-type"], "Point"],
+    //       ["==", ["geometry-type"], "MultiPoint"],
+    //     ],
+    //   });
+    //   map.events.add("click", wardOffice, featureClicked);
+    //   map.layers.add(wardOffice);
+    //   wardOfficeDataSource.importDataFromUrl(wardOfficeGeojson);
+    // });
 
     legend = new atlas.control.LegendControl({
       title: "Ahemdabad City's Municipal Corporation Facilty",
@@ -166,13 +182,13 @@ document.addEventListener("DOMContentLoaded", function () {
             {
               color: "Blue",
               label: "Zone Offices",
-              shape: "circle",
+              shape: "static/img/offices.png",
             },
-            {
-              color: "Yellow",
-              label: "Ward Offices",
-              shape: "circle",
-            },
+            // {
+            //   color: "Yellow",
+            //   label: "Ward Offices",
+            //   shape: "static/img/office.png",
+            // },
           ],
         },
       ],
@@ -223,38 +239,38 @@ function rotateMap(offset) {
 function featureClicked(e) {
   //Make sure the event occurred on a shape feature.
   if (e.shapes && e.shapes.length > 0) {
-      //By default, show the popup where the mouse event occurred.
-      var pos = e.position;
-      var offset = [0, 0];
-      var properties;
+    //By default, show the popup where the mouse event occurred.
+    var pos = e.position;
+    var offset = [0, 0];
+    var properties;
 
-      if (e.shapes[0] instanceof atlas.Shape) {
-          properties = e.shapes[0].getProperties();
+    if (e.shapes[0] instanceof atlas.Shape) {
+      properties = e.shapes[0].getProperties();
 
-          //If the shape is a point feature, show the popup at the points coordinate.
-          if (e.shapes[0].getType() === 'Point') {
-              pos = e.shapes[0].getCoordinates();
-              offset = [0, -18];
-          }
-      } else {
-          properties = e.shapes[0].properties;
-
-          //If the shape is a point feature, show the popup at the points coordinate.
-          if (e.shapes[0].type === 'Point') {
-              pos = e.shapes[0].geometry.coordinates;
-              offset = [0, -18];
-          }
+      //If the shape is a point feature, show the popup at the points coordinate.
+      if (e.shapes[0].getType() === "Point") {
+        pos = e.shapes[0].getCoordinates();
+        offset = [0, -18];
       }
-      console.log(e.shapes[0])
-      //Update the content and position of the popup.
-      popup.setOptions({
-          //Create a table from the properties in the feature.
-          content: atlas.PopupTemplate.applyTemplate(properties),
-          position: pos,
-          pixelOffset: offset
-      });
+    } else {
+      properties = e.shapes[0].properties;
 
-      //Open the popup.
-      popup.open(map);
+      //If the shape is a point feature, show the popup at the points coordinate.
+      if (e.shapes[0].type === "Point") {
+        pos = e.shapes[0].geometry.coordinates;
+        offset = [0, -18];
+      }
+    }
+    console.log(e.shapes[0]);
+    //Update the content and position of the popup.
+    popup.setOptions({
+      //Create a table from the properties in the feature.
+      content: atlas.PopupTemplate.applyTemplate(properties),
+      position: pos,
+      pixelOffset: offset,
+    });
+
+    //Open the popup.
+    popup.open(map);
   }
 }
