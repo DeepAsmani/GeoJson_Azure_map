@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>AMC Facilty</title>
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.css" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/azure-maps-layer-legend.min.css')}}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}" type="text/css" />
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.js"></script>
+    <script>
+        var cityLatitude = parseFloat("{{ city_latitude | safe }}");
+        var cityLongitude = parseFloat("{{ city_longitude | safe }}");
+        var wardGeojson = "{{ ward_geojson }}";
+        var librariesGeojson = "{{ libraries_geojson }}";
+        var gymsGeojson = "{{ gyms_geojson }}";
+        var swimmingPoolsGeojson = "{{ swimming_pools_geojson }}";
+        var zonalOfficeGeojson = "{{ zonal_office_geojson }}";
+        var wardOfficeGeojson = "{{ ward_office_geojson }}";
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/azure-maps-layer-legend.min.js') }}"></script>
+</head>
+
+<body>
+    <div class="mapContainer">
+        <div id="map" style="height: 750px;"></div>
+        <div class="controlContainer">
+            <button class="navButton" onclick="zoomMap(0.5)" title="Zoom In">+</button>
+            <button class="navButton" onclick="zoomMap(-0.5)" title="Zoom Out">⚊</button>
+            <button class="navButton" onclick="pitchMap(-1)" title="Derease Pitch">🠗</button>
+            <button class="navButton" onclick="pitchMap(1)" title="Increase Pitch">🠕</button>
+            <button class="navButton" onclick="rotateMap(-1)" title="Rotate Right">⟳</button>
+            <button class="navButton" onclick="rotateMap(1)" title="Rotate Left">⟲</button>
+        </div>
+    </div>
+</body>
+
+</html>

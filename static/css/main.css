@@ -1,0 +1,47 @@
+.mapContainer,
+#map {
+    position: relative;
+    width: 100%;
+    min-width: 290px;
+    height: 600px;
+}
+
+.controlContainer {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.controlContainer .navButton {
+    margin: 2px;
+    background-color: #fff;
+    box-shadow: rgb(0 0 0 / 16%) 0 0 4px;
+    border: none;
+    border-radius: 2px;
+    width: 32px;
+    height: 32px;
+    padding: 2px 8px;
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    line-height: 20px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.controlContainer .navButton:hover {
+    color: deepskyblue;
+}
+
+.controlContainer .navSelect {
+    width: 140px;
+    padding: 5px;
+    font-size: 14px;
+}
+
+.controlContainer .navSelect:hover {
+    color: black;
+}
