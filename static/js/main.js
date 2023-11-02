@@ -136,31 +136,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Function to handle map pitch
-  const pitchStep = 10;
-
-  function pitchMap(offset) {
-    map.setCamera({
-      pitch: Math.max(
-        0,
-        Math.min(60, map.getCamera().pitch + offset * pitchStep)
-      ),
-      type: "ease",
-      duration: 250,
-    });
-  }
-
-  // Function to handle map rotation
-  const bearingStep = 15;
-
-  function rotateMap(offset) {
-    map.setCamera({
-      bearing: map.getCamera().bearing + offset * bearingStep,
-      type: "ease",
-      duration: 250,
-    });
-  }
-
   // Function to handle feature click event
   function featureClicked(e) {
     if (e.shapes && e.shapes.length > 0) {
@@ -192,3 +167,29 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 });
+
+
+// Function to handle map pitch
+const pitchStep = 10;
+
+function pitchMap(offset) {
+  map.setCamera({
+    pitch: Math.max(
+      0,
+      Math.min(60, map.getCamera().pitch + offset * pitchStep)
+    ),
+    type: "ease",
+    duration: 250,
+  });
+}
+
+// Function to handle map rotation
+const bearingStep = 15;
+
+function rotateMap(offset) {
+  map.setCamera({
+    bearing: map.getCamera().bearing + offset * bearingStep,
+    type: "ease",
+    duration: 250,
+  });
+}
