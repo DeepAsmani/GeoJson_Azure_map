@@ -125,16 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Function to handle map zoom
-  function zoomMap(offset) {
-    var cam = map.getCamera();
-
-    map.setCamera({
-      zoom: Math.max(cam.minZoom, Math.min(cam.maxZoom, cam.zoom + offset)),
-      type: "ease",
-      duration: 250,
-    });
-  }
+ 
 
   // Function to handle feature click event
   function featureClicked(e) {
@@ -168,6 +159,17 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+
+ // Function to handle map zoom
+ function zoomMap(offset) {
+  var cam = map.getCamera();
+
+  map.setCamera({
+    zoom: Math.max(cam.minZoom, Math.min(cam.maxZoom, cam.zoom + offset)),
+    type: "ease",
+    duration: 250,
+  });
+}
 
 // Function to handle map pitch
 const pitchStep = 10;
