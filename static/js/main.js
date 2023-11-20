@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     view: "Auto",
     authOptions: {
       authType: "subscriptionKey",
-      subscriptionKey: "{{ azure_subscription_key }}", // Replace with your actual key
+      subscriptionKey: key // Replace with your actual key
     },
   });
 
